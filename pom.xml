@@ -13,6 +13,9 @@
     <modules>
         <module>jacoco-report-aggregate</module>
         <module>common-tools</module>
+        <module>msvc-elementos</module>
+        <module>msvc-estadisticas</module>
+        <module>msvc-liga</module>
     </modules>
 
     <parent>

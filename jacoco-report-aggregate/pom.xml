@@ -19,6 +19,21 @@
             <artifactId>common-tools</artifactId>
             <version>${project.version}</version>
         </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>msvc-elementos</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>msvc-estadisticas</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>msvc-liga</artifactId>
+            <version>${project.version}</version>
+        </dependency>
     </dependencies>
 
     <build>

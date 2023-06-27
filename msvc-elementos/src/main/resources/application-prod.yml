@@ -1,0 +1,15 @@
+server:
+  port: 8001
+  servlet:
+    context-path: /msvc-elementos
+
+spring:
+  application:
+    name: msvc-elementos
+  autoconfigure:
+    exclude: org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration
+  data:
+    mongodb:
+      database: app_fubol
+      host: localhost
+      port: 27017

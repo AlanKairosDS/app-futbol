@@ -1,0 +1,15 @@
+server:
+  port: 8001
+  servlet:
+    context-path: /msvc-liga
+
+spring:
+  application:
+    name: msvc-liga
+  autoconfigure:
+    exclude: org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration
+  data:
+    mongodb:
+      database: app_fubol
+      host: localhost
+      port: 27017
