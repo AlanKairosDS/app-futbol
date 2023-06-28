@@ -12,5 +12,5 @@ public interface MvpService {
 
   ResponseEntity<RestResponse<Object>> consultarMvpById (String id);
 
-  ResponseEntity<RestResponse<Object>> consultarMvpByFutbolista (String id);
+  ResponseEntity<RestResponse<Object>> consultarMvpByJornada (String id);
 }

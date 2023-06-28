@@ -64,7 +64,6 @@ public class FutbolistasServiceImpl implements FutbolistaService {
       Futbolista futbolista1 = futbolistaOptional.get();
 
       futbolista1.setNombre(futbolista.getNombre());
-      futbolista1.setFechaNacimiento(futbolista.getFechaNacimiento());
       futbolista1.setPosicion(futbolista.getPosicion());
       futbolista1.setFechaModificacion(utilService.obtenerFechaActual());
 

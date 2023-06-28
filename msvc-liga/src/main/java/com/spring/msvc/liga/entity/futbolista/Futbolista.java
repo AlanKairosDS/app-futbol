@@ -27,11 +27,6 @@ public class Futbolista {
   @Size(max = 100)
   private String nombre;
 
-  @NotNull(message = "La fecha de nacimiento no puede ser NULL")
-  @NotBlank(message = "La fecha de nacimiento no puede estar vacia")
-  @Size(max = 20)
-  private String fechaNacimiento;
-
   @NotNull(message = "La posicion no puede ser NULL")
   @NotBlank(message = "La posicion no puede estar vacia")
   @Size(max = 50)

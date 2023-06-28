@@ -24,6 +24,4 @@ public class JugadorMvp {
   private String futbolista;
 
   private int jornada;
-
-  private int mvp;
 }

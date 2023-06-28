@@ -46,9 +46,9 @@ public class MvpController {
   }
 
   @GetMapping(
-          value = "/consultar-mvp-futbolista/{id}",
+          value = "/consultar-mvp-jornada/{id}",
           produces = {MediaType.APPLICATION_JSON_VALUE})
-  public ResponseEntity<RestResponse<Object>> consultarMvpByFutbolista (@PathVariable String id) {
-    return mvpService.consultarMvpByFutbolista(id);
+  public ResponseEntity<RestResponse<Object>> consultarMvpByJornada (@PathVariable String id) {
+    return mvpService.consultarMvpByJornada(id);
   }
 }

@@ -13,5 +13,4 @@ public class MvpResponse {
   private String id;
   private Futbolista futbolista;
   private int jornada;
-  private int mvp;
 }

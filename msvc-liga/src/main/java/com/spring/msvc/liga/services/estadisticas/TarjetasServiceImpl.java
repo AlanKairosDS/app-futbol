@@ -82,27 +82,39 @@ public class TarjetasServiceImpl implements TarjetasService {
     List<Tarjetas> tarjetasList = tarjetasRepository.findAll();
     List<TarjetasResponse> tarjetasFutbolistaList = new ArrayList<>();
 
-    for (Tarjetas tarjeta : tarjetasList) {
-      Optional<Futbolista> futbolistaOptional = futbolistaRepository.findById(tarjeta.getFutbolista());
+    if (!tarjetasList.isEmpty()) {
+      for (Tarjetas tarjeta : tarjetasList) {
+        Optional<Futbolista> futbolistaOptional = futbolistaRepository.findById(tarjeta.getFutbolista());
 
-      TarjetasResponse tarjetasResponse = TarjetasResponse.builder()
-              .id(tarjeta.getId())
-              .futbolista(futbolistaOptional.get())
-              .amarillas(tarjeta.getAmarillas())
-              .rojas(tarjeta.getRojas())
-              .build();
+        TarjetasResponse tarjetasResponse = TarjetasResponse.builder()
+                .id(tarjeta.getId())
+                .futbolista(futbolistaOptional.get())
+                .amarillas(tarjeta.getAmarillas())
+                .rojas(tarjeta.getRojas())
+                .build();
 
-      tarjetasFutbolistaList.add(tarjetasResponse);
+        tarjetasFutbolistaList.add(tarjetasResponse);
+      }
+
+      return new UtilService().armarRespuesta(
+              HttpStatus.OK.value(),
+              EXITO,
+              "Se consulta la tabla de tarjetas de forma correcta",
+              true,
+              tarjetasFutbolistaList,
+              HttpStatus.OK
+      );
     }
-
-    return new UtilService().armarRespuesta(
-            HttpStatus.OK.value(),
-            EXITO,
-            "Se consulta la tabla de tarjetas de forma correcta",
-            true,
-            tarjetasFutbolistaList,
-            HttpStatus.OK
-    );
+    else {
+      return new UtilService().armarRespuesta(
+              HttpStatus.BAD_REQUEST.value(),
+              "Ocurrio un error al consultar la tabla de tarjetas",
+              "No se encontro ningun registro",
+              true,
+              null,
+              HttpStatus.BAD_REQUEST
+      );
+    }
   }
 
   @Override

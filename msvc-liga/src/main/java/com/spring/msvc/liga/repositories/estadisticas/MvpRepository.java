@@ -7,5 +7,5 @@ import java.util.Optional;
 
 public interface MvpRepository extends MongoRepository<JugadorMvp, String> {
 
-  Optional<JugadorMvp> findByFutbolista(String futbolista);
+  Optional<JugadorMvp> findByJornada(String jornada);
 }
