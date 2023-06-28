@@ -200,15 +200,15 @@ public class PartidoServiceImpl implements PartidoService {
 
   @Override
   public ResponseEntity<RestResponse<Object>> consultarPartidoByJornada (String jornada) {
-    Optional<Partido> optionalPartido = partidosRepository.findByJornada(Integer.parseInt(jornada));
+    List<Partido> partidoList = partidosRepository.findByJornada(Integer.parseInt(jornada));
 
-    if (optionalPartido.isPresent()) {
+    if (!partidoList.isEmpty()) {
       return new UtilService().armarRespuesta(
               HttpStatus.OK.value(),
               EXITO,
               "Se encontraron partidos para la jornada especificada",
               true,
-              optionalPartido.stream().collect(Collectors.toList()),
+              partidoList,
               HttpStatus.OK
       );
     }
@@ -228,15 +228,15 @@ public class PartidoServiceImpl implements PartidoService {
   public ResponseEntity<RestResponse<Object>> consultarPartidoByFecha (String fecha) {
     String fechaFormat = fecha.substring(0, 2) + "/" + fecha.substring(2, 4) + "/" + fecha.substring(4, 8);
 
-    Optional<Partido> optionalPartido = partidosRepository.findByFecha(fechaFormat);
+    List<Partido> partidoList = partidosRepository.findByFecha(fechaFormat);
 
-    if (optionalPartido.isPresent()) {
+    if (!partidoList.isEmpty()) {
       return new UtilService().armarRespuesta(
               HttpStatus.OK.value(),
               EXITO,
               "Se encontraron partidos para la fecha especificada",
               true,
-              optionalPartido.stream().collect(Collectors.toList()),
+              partidoList,
               HttpStatus.OK
       );
     }
