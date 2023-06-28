@@ -19,4 +19,6 @@ public interface PartidoService {
   ResponseEntity<RestResponse<Object>> consultarPartidoByJornada (String jornada);
 
   ResponseEntity<RestResponse<Object>> consultarPartidoByFecha (String fecha);
+
+  ResponseEntity<RestResponse<Object>> consultarPartidoByHora (String hora);
 }

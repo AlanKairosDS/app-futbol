@@ -28,6 +28,8 @@ public class Partido {
 
   private String fecha;
 
+  private int hora;
+
   @DBRef
   private Equipo equipoLocal;
 

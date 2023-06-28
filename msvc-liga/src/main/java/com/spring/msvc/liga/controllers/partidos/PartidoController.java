@@ -76,4 +76,11 @@ public class PartidoController {
   public ResponseEntity<RestResponse<Object>> consultarPartidoByFecha (@PathVariable String fecha) {
     return partidoService.consultarPartidoByFecha(fecha);
   }
+
+  @GetMapping(
+          value = "/consultar-partido-hora/{hora}",
+          produces = {MediaType.APPLICATION_JSON_VALUE})
+  public ResponseEntity<RestResponse<Object>> consultarPartidoByHora (@PathVariable String hora) {
+    return partidoService.consultarPartidoByHora(hora);
+  }
 }

@@ -45,6 +45,7 @@ public class PartidoServiceImpl implements PartidoService {
         Partido partido = Partido.builder()
                 .jornada(partidoRequest.getJornada())
                 .fecha(partidoRequest.getFechaPartido())
+                .hora(partidoRequest.getHora())
                 .equipoLocal(equipoLocal.get())
                 .equipoVisitante(equipoVisita.get())
                 .build();
@@ -95,6 +96,7 @@ public class PartidoServiceImpl implements PartidoService {
 
         partido.setJornada(partidoRequest.getJornada());
         partido.setFecha(partidoRequest.getFechaPartido());
+        partido.setHora(partidoRequest.getHora());
         partido.setEquipoLocal(equipoLocal.get());
         partido.setEquipoVisitante(equipoVisita.get());
 
@@ -245,6 +247,32 @@ public class PartidoServiceImpl implements PartidoService {
               HttpStatus.BAD_REQUEST.value(),
               ERROR_CONSULTA,
               "No hay partidos en la fecha especificada",
+              true,
+              null,
+              HttpStatus.BAD_REQUEST
+      );
+    }
+  }
+
+  @Override
+  public ResponseEntity<RestResponse<Object>> consultarPartidoByHora (String hora) {
+    List<Partido> partidoList = partidosRepository.findByHora(Integer.parseInt(hora));
+
+    if (!partidoList.isEmpty()) {
+      return new UtilService().armarRespuesta(
+              HttpStatus.OK.value(),
+              EXITO,
+              "Se encontraron partidos para la hora especificada",
+              true,
+              partidoList,
+              HttpStatus.OK
+      );
+    }
+    else {
+      return new UtilService().armarRespuesta(
+              HttpStatus.BAD_REQUEST.value(),
+              ERROR_CONSULTA,
+              "No hay partidos en la hora especificada",
               true,
               null,
               HttpStatus.BAD_REQUEST

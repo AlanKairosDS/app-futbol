@@ -20,6 +20,9 @@ public class PartidoRequest {
   @Size(max = 20)
   private String fechaPartido;
 
+  @NotNull(message = "La hora no puede ser NULL")
+  private Integer hora;
+
   @NotNull(message = "El id del equipo local no puede ser NULL")
   @NotBlank(message = "El id del equipo local no puede estar vacio")
   private String idEquipoLocal;

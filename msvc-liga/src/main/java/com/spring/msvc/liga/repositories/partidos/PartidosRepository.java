@@ -8,7 +8,9 @@ import java.util.Optional;
 
 public interface PartidosRepository extends MongoRepository<Partido, String> {
 
-  List<Partido> findByJornada(int jornada);
+  List<Partido> findByJornada (int jornada);
 
-  List<Partido> findByFecha(String fecha);
+  List<Partido> findByFecha (String fecha);
+
+  List<Partido> findByHora (int hora);
 }
