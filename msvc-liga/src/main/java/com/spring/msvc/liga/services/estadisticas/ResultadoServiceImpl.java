@@ -2,8 +2,13 @@ package com.spring.msvc.liga.services.estadisticas;
 
 import com.spring.common.tools.entity.RestResponse;
 import com.spring.common.tools.service.UtilService;
+import com.spring.msvc.liga.dto.estadisticas.EstadisticasRequest;
+import com.spring.msvc.liga.dto.estadisticas.ResultadoRequest;
 import com.spring.msvc.liga.entity.estadisticas.Resultado;
+import com.spring.msvc.liga.entity.estadisticas.ResultadoEstad;
+import com.spring.msvc.liga.entity.partidos.Partido;
 import com.spring.msvc.liga.repositories.estadisticas.ResultadoRepository;
+import com.spring.msvc.liga.repositories.partidos.PartidosRepository;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +30,9 @@ public class ResultadoServiceImpl implements ResultadoService {
   private ResultadoRepository resultadoRepository;
 
   @Autowired
+  private PartidosRepository partidosRepository;
+
+  @Autowired
   private GolesServiceImpl golesServiceImpl;
 
   @Autowired
@@ -40,8 +48,151 @@ public class ResultadoServiceImpl implements ResultadoService {
   private UtilService utilService;
 
   @Override
-  public ResponseEntity<RestResponse<Object>> registrarResultado (Resultado resultado) {
-    return null;
+  public ResponseEntity<RestResponse<Object>> registrarResultado (ResultadoRequest resultadoRequest) {
+    Optional<Partido> partidoOptional = partidosRepository.findById(resultadoRequest.getPartido());
+
+    if (partidoOptional.isPresent()) {
+      Resultado resultado = Resultado.builder()
+              .partido(partidoOptional.get())
+              .jornada(resultadoRequest.getJornada())
+              .marcadorLocal(resultadoRequest.getMarcadorLocal())
+              .marcadorVisita(resultadoRequest.getMarcadorVisita())
+              .idTablaEquipoLocal(resultadoRequest.getIdTablaEquipoLocal())
+              .idTablaEquipoVisita(resultadoRequest.getIdTablaEquipoVisita())
+              .ganador(resultadoRequest.getGanador())
+              .estadisticas(resultadoRequest.getEstadisticas())
+              .build();
+
+      resultadoRepository.save(resultado);
+
+      actualizarTablaGoleo(resultadoRequest);
+      actualizarTablaTarjetas(resultadoRequest);
+      actualizarTablaMvp(resultadoRequest);
+      actualizarTablaGeneralLocal(resultadoRequest);
+      actualizarTablaGeneralVisita(resultadoRequest);
+
+      return new UtilService().armarRespuesta(
+              HttpStatus.OK.value(),
+              EXITO,
+              "Se registro el resultado de forma correcta",
+              true,
+              null,
+              HttpStatus.OK
+      );
+    }
+    else {
+      return new UtilService().armarRespuesta(
+              HttpStatus.BAD_REQUEST.value(),
+              "Ocurrio un error al registrar el resultado",
+              "El partido que quieres registrar no existe",
+              true,
+              null,
+              HttpStatus.BAD_REQUEST
+      );
+    }
+  }
+
+  public void actualizarTablaGoleo (ResultadoRequest resultadoRequest) {
+    for (ResultadoEstad resultadoEstad : resultadoRequest.getEstadisticas()) {
+      if (resultadoEstad.getGoles() > 0 || resultadoEstad.getAsistencias() > 0) {
+        EstadisticasRequest estadisticasRequest = EstadisticasRequest.builder()
+                .idFutbolista(resultadoEstad.getIdFutbolista())
+                .goles(resultadoEstad.getGoles())
+                .asitencias(resultadoEstad.getAsistencias())
+                .build();
+
+        golesServiceImpl.agregarActualizarGoles(estadisticasRequest);
+      }
+    }
+  }
+
+  public void actualizarTablaTarjetas (ResultadoRequest resultadoRequest) {
+    for (ResultadoEstad resultadoEstad : resultadoRequest.getEstadisticas()) {
+      if (resultadoEstad.getAmarillas() > 0 || resultadoEstad.getRojas() > 0) {
+        EstadisticasRequest estadisticasRequest = EstadisticasRequest.builder()
+                .idFutbolista(resultadoEstad.getIdFutbolista())
+                .amarillas(resultadoEstad.getAmarillas())
+                .rojas(resultadoEstad.getRojas())
+                .build();
+
+        tarjetasServiceImpl.agregarActualizarTarjetas(estadisticasRequest);
+      }
+    }
+  }
+
+  public void actualizarTablaMvp (ResultadoRequest resultadoRequest) {
+    for (ResultadoEstad resultadoEstad : resultadoRequest.getEstadisticas()) {
+      if (resultadoEstad.isMvp()) {
+        EstadisticasRequest estadisticasRequest = EstadisticasRequest.builder()
+                .idFutbolista(resultadoEstad.getIdFutbolista())
+                .jornada(resultadoRequest.getJornada())
+                .build();
+
+        mvpServiceImpl.agregarActualizarMvp(estadisticasRequest);
+      }
+    }
+  }
+
+  public void actualizarTablaGeneralLocal (ResultadoRequest resultadoRequest) {
+    int puntosLocal = 0;
+    int victoria = 0;
+    int empate = 0;
+    int derrota = 0;
+
+    if (resultadoRequest.getGanador().equals("Local")) {
+      puntosLocal = 3;
+      victoria = 1;
+    }
+    else if (resultadoRequest.getGanador().equals("Empate")) {
+      puntosLocal = 1;
+      empate = 1;
+    }
+    else {
+      derrota = 1;
+    }
+
+    EstadisticasRequest equipoLocal = EstadisticasRequest.builder()
+            .idTabla(resultadoRequest.getIdTablaEquipoLocal())
+            .puntos(puntosLocal)
+            .victorias(victoria)
+            .empates(empate)
+            .derrotas(derrota)
+            .golesFavor(resultadoRequest.getMarcadorLocal())
+            .golesContra(resultadoRequest.getMarcadorVisita())
+            .build();
+
+    tablaGeneralServiceImpl.actualizarTablaGeneral(equipoLocal);
+  }
+
+  public void actualizarTablaGeneralVisita (ResultadoRequest resultadoRequest) {
+    int puntosVisita = 0;
+    int victoria = 0;
+    int empate = 0;
+    int derrota = 0;
+
+    if (resultadoRequest.getGanador().equals("Visita")) {
+      puntosVisita = 3;
+      victoria = 1;
+    }
+    else if (resultadoRequest.getGanador().equals("Empate")) {
+      puntosVisita = 1;
+      empate = 1;
+    }
+    else {
+      derrota = 1;
+    }
+
+    EstadisticasRequest equipoVisita = EstadisticasRequest.builder()
+            .idTabla(resultadoRequest.getIdTablaEquipoVisita())
+            .puntos(puntosVisita)
+            .victorias(victoria)
+            .empates(empate)
+            .derrotas(derrota)
+            .golesFavor(resultadoRequest.getMarcadorVisita())
+            .golesContra(resultadoRequest.getMarcadorLocal())
+            .build();
+
+    tablaGeneralServiceImpl.actualizarTablaGeneral(equipoVisita);
   }
 
   @Override

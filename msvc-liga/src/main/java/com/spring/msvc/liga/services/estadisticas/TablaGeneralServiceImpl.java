@@ -80,13 +80,16 @@ public class TablaGeneralServiceImpl implements TablaGeneralService {
     if (tablaOptional.isPresent()) {
       TablaGeneral tablaGeneral = tablaOptional.get();
 
+      int golesFavor = tablaOptional.get().getGolesFavor() + estadisticasRequest.getGolesFavor();
+      int golesContra = tablaOptional.get().getGolesContra() + estadisticasRequest.getGolesContra();
+
       tablaGeneral.setPuntos(tablaOptional.get().getPuntos() + estadisticasRequest.getPuntos());
       tablaGeneral.setVictorias(tablaOptional.get().getVictorias() + estadisticasRequest.getVictorias());
       tablaGeneral.setEmpates(tablaOptional.get().getEmpates() + estadisticasRequest.getEmpates());
       tablaGeneral.setDerrotas(tablaOptional.get().getDerrotas() + estadisticasRequest.getDerrotas());
-      tablaGeneral.setGolesFavor(tablaOptional.get().getGolesFavor() + estadisticasRequest.getGolesFavor());
-      tablaGeneral.setGolesContra(tablaOptional.get().getGolesContra() + estadisticasRequest.getGolesContra());
-      tablaGeneral.setDiferenciaGoles(tablaGeneral.getGolesFavor() - tablaGeneral.getGolesContra());
+      tablaGeneral.setGolesFavor(golesFavor);
+      tablaGeneral.setGolesContra(golesContra);
+      tablaGeneral.setDiferenciaGoles(golesFavor - golesContra);
 
       generalRepository.save(tablaGeneral);
 

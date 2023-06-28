@@ -22,4 +22,6 @@ public class ResultadoEstad {
   private int amarillas;
 
   private int rojas;
+
+  private boolean mvp;
 }

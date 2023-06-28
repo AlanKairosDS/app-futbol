@@ -1,12 +1,12 @@
 package com.spring.msvc.liga.services.estadisticas;
 
 import com.spring.common.tools.entity.RestResponse;
-import com.spring.msvc.liga.entity.estadisticas.Resultado;
+import com.spring.msvc.liga.dto.estadisticas.ResultadoRequest;
 import org.springframework.http.ResponseEntity;
 
 public interface ResultadoService {
 
-  ResponseEntity<RestResponse<Object>> registrarResultado (Resultado resultado);
+  ResponseEntity<RestResponse<Object>> registrarResultado (ResultadoRequest resultadoRequest);
 
   ResponseEntity<RestResponse<Object>> consultarResultados ();
 

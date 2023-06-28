@@ -1,6 +1,7 @@
 package com.spring.msvc.liga.controllers.estadisticas;
 
 import com.spring.common.tools.entity.RestResponse;
+import com.spring.msvc.liga.dto.estadisticas.ResultadoRequest;
 import com.spring.msvc.liga.entity.estadisticas.Resultado;
 import com.spring.msvc.liga.services.estadisticas.ResultadoService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,8 +27,8 @@ public class ResultadoController {
           value = "/registrar-resultado",
           produces = {MediaType.APPLICATION_JSON_VALUE},
           consumes = {MediaType.APPLICATION_JSON_VALUE})
-  public ResponseEntity<RestResponse<Object>> registrarResultado (@RequestBody Resultado resultado) {
-    return resultadoService.registrarResultado(resultado);
+  public ResponseEntity<RestResponse<Object>> registrarResultado (@RequestBody ResultadoRequest resultadoRequest) {
+    return resultadoService.registrarResultado(resultadoRequest);
   }
 
   @GetMapping(

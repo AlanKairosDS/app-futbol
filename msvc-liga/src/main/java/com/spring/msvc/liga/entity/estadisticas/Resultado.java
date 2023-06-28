@@ -26,15 +26,17 @@ public class Resultado {
   @DBRef
   private Partido partido;
 
+  private int jornada;
+
   private int marcadorLocal;
 
   private int marcadorVisita;
 
-  private String idEquipoVictoria;
+  private String idTablaEquipoLocal;
 
-  private String idEquipoDerrota;
+  private String idTablaEquipoVisita;
 
-  private boolean empate;
+  private String ganador;
 
   private List<ResultadoEstad> estadisticas;
 }
