@@ -18,7 +18,7 @@ import java.util.stream.Collectors;
 @Service
 public class FutbolistasServiceImpl implements FutbolistaService {
 
-  private static final Logger LOGGER = LogManager.getLogger("elementos");
+  private static final Logger LOGGER = LogManager.getLogger("liga");
   private static final String EXITO = "Proceso ejecutado correctamente";
 
   @Autowired

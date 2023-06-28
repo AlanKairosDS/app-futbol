@@ -24,13 +24,9 @@ public class Partido {
   @Id
   private String id;
 
-  @NotNull(message = "La jornada no puede ser NULL")
-  private Integer jornada;
+  private int jornada;
 
-  @NotNull(message = "La fecha no puede ser NULL")
-  @NotBlank(message = "La fecha no puede estar vacia")
-  @Size(max = 20)
-  private String fechaPartido;
+  private String fecha;
 
   @DBRef
   private Equipo equipoLocal;

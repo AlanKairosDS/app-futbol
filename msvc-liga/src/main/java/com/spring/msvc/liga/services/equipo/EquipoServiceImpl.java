@@ -21,7 +21,7 @@ import java.util.stream.Collectors;
 @Service
 public class EquipoServiceImpl implements EquipoService {
 
-  private static final Logger LOGGER = LogManager.getLogger("elementos");
+  private static final Logger LOGGER = LogManager.getLogger("liga");
   private static final String EXITO = "Proceso ejecutado correctamente";
 
   @Autowired
