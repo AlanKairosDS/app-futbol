@@ -16,7 +16,9 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Builder
@@ -32,26 +34,24 @@ public class LigaFemenil {
 
   private String nombre;
 
-  private String temporada;
+  @DBRef
+  private List<Equipo> equipos = new ArrayList<>();
 
   @DBRef
-  private Set<Equipo> equipos = new HashSet<>();
+  private List<Partido> partidos = new ArrayList<>();
 
   @DBRef
-  private Set<Partido> partidos = new HashSet<>();
+  private List<TablaGeneral> tablaGeneral = new ArrayList<>();
 
   @DBRef
-  private Set<TablaGeneral> tablaGeneral = new HashSet<>();
+  private List<Resultado> resultados = new ArrayList<>();
 
   @DBRef
-  private Set<Resultado> resultados = new HashSet<>();
+  private List<GolesAsistencias> golesAsistencias = new ArrayList<>();
 
   @DBRef
-  private Set<GolesAsistencias> golesAsistencias = new HashSet<>();
+  private List<Tarjetas> tarjetas = new ArrayList<>();
 
   @DBRef
-  private Set<Tarjetas> tarjetas = new HashSet<>();
-
-  @DBRef
-  private Set<JugadorMvp> jugadorMvp = new HashSet<>();
+  private List<JugadorMvp> jugadorMvp = new ArrayList<>();
 }
