@@ -4,7 +4,6 @@ WORKDIR /app
 
 COPY ./target/msvc-liga.jar .
 
-EXPOSE 8002
+EXPOSE 8000
 
-#CMD ["java", "-Dspring.profiles.active=prod", "-jar", "msvc-login.jar"]
-CMD ["java", "-jar", "msvc-liga.jar"]
+CMD ["java", "-Dspring.profiles.active=prod", "-jar", "msvc-liga.jar"]

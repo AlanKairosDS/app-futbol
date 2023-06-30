@@ -1,5 +1,5 @@
 server:
-  port: 8001
+  port: 8000
   servlet:
     context-path: /msvc-liga
 
@@ -10,6 +10,6 @@ spring:
     exclude: org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration
   data:
     mongodb:
-      database: app_fubol
-      host: localhost
+      database: app_fubol_dev
+      host: host.docker.internal
       port: 27017
