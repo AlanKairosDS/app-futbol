@@ -68,8 +68,8 @@ public class ResultadoServiceImpl implements ResultadoService {
       actualizarTablaGoleo(resultadoRequest);
       actualizarTablaTarjetas(resultadoRequest);
       actualizarTablaMvp(resultadoRequest);
-      actualizarTablaGeneralLocal(resultadoRequest);
-      actualizarTablaGeneralVisita(resultadoRequest);
+      actualizarTablaGeneralLocal(resultadoRequest, partidoOptional.get());
+      actualizarTablaGeneralVisita(resultadoRequest, partidoOptional.get());
 
       return new UtilService().armarRespuesta(
               HttpStatus.OK.value(),
@@ -133,7 +133,7 @@ public class ResultadoServiceImpl implements ResultadoService {
     }
   }
 
-  public void actualizarTablaGeneralLocal (ResultadoRequest resultadoRequest) {
+  public void actualizarTablaGeneralLocal (ResultadoRequest resultadoRequest, Partido partido) {
     int puntosLocal = 0;
     int victoria = 0;
     int empate = 0;
@@ -153,6 +153,7 @@ public class ResultadoServiceImpl implements ResultadoService {
 
     EstadisticasRequest equipoLocal = EstadisticasRequest.builder()
             .idTabla(resultadoRequest.getIdTablaEquipoLocal())
+            .idEquipo(partido.getEquipoLocal().getId())
             .puntos(puntosLocal)
             .victorias(victoria)
             .empates(empate)
@@ -161,10 +162,10 @@ public class ResultadoServiceImpl implements ResultadoService {
             .golesContra(resultadoRequest.getMarcadorVisita())
             .build();
 
-    tablaGeneralServiceImpl.actualizarTablaGeneral(equipoLocal);
+    tablaGeneralServiceImpl.actualizarTablaGeneral(equipoLocal, resultadoRequest.getIdTablaEquipoLocal());
   }
 
-  public void actualizarTablaGeneralVisita (ResultadoRequest resultadoRequest) {
+  public void actualizarTablaGeneralVisita (ResultadoRequest resultadoRequest, Partido partido) {
     int puntosVisita = 0;
     int victoria = 0;
     int empate = 0;
@@ -184,6 +185,7 @@ public class ResultadoServiceImpl implements ResultadoService {
 
     EstadisticasRequest equipoVisita = EstadisticasRequest.builder()
             .idTabla(resultadoRequest.getIdTablaEquipoVisita())
+            .idEquipo(partido.getEquipoVisitante().getId())
             .puntos(puntosVisita)
             .victorias(victoria)
             .empates(empate)
@@ -192,7 +194,7 @@ public class ResultadoServiceImpl implements ResultadoService {
             .golesContra(resultadoRequest.getMarcadorLocal())
             .build();
 
-    tablaGeneralServiceImpl.actualizarTablaGeneral(equipoVisita);
+    tablaGeneralServiceImpl.actualizarTablaGeneral(equipoVisita, resultadoRequest.getIdTablaEquipoVisita());
   }
 
   @Override

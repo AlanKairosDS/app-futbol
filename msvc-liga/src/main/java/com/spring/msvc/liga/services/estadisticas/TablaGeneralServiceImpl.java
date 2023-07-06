@@ -4,6 +4,7 @@ import com.spring.common.tools.entity.RestResponse;
 import com.spring.common.tools.service.UtilService;
 import com.spring.msvc.liga.dto.estadisticas.EstadisticasRequest;
 import com.spring.msvc.liga.entity.equipo.Equipo;
+import com.spring.msvc.liga.entity.estadisticas.EquiposTabla;
 import com.spring.msvc.liga.entity.estadisticas.TablaGeneral;
 import com.spring.msvc.liga.repositories.equipo.EquipoRepository;
 import com.spring.msvc.liga.repositories.estadisticas.GeneralRepository;
@@ -16,6 +17,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -33,39 +35,72 @@ public class TablaGeneralServiceImpl implements TablaGeneralService {
   @Autowired
   private UtilService utilService;
 
+  @Override
+  public ResponseEntity<RestResponse<Object>> nuevaTablaGeneral (TablaGeneral tablaGeneral) {
+    generalRepository.save(tablaGeneral);
+
+    return new UtilService().armarRespuesta(
+            HttpStatus.OK.value(),
+            EXITO,
+            "Se creo la tabla general de forma correcta",
+            true,
+            null,
+            HttpStatus.OK
+    );
+  }
 
   @Override
-  public ResponseEntity<RestResponse<Object>> registrarEquipoTabla (String idEquipo) {
-    Optional<Equipo> equipoOptional = equipoRepository.findById(idEquipo);
+  public ResponseEntity<RestResponse<Object>> registrarEquipoTabla (String idTabla, String idEquipo) {
+    Optional<TablaGeneral> tablaGeneralOptional = generalRepository.findById(idTabla);
 
-    if (equipoOptional.isPresent()) {
-      TablaGeneral tablaGeneral = TablaGeneral.builder()
-              .equipo(equipoOptional.get())
-              .puntos(0)
-              .victorias(0)
-              .empates(0)
-              .derrotas(0)
-              .golesFavor(0)
-              .golesContra(0)
-              .diferenciaGoles(0)
-              .build();
+    if (tablaGeneralOptional.isPresent()) {
+      Optional<Equipo> equipoOptional = equipoRepository.findById(idEquipo);
 
-      generalRepository.save(tablaGeneral);
+      if (equipoOptional.isPresent()) {
+        TablaGeneral tablaGeneral = tablaGeneralOptional.get();
 
-      return new UtilService().armarRespuesta(
-              HttpStatus.OK.value(),
-              EXITO,
-              "Equipo registrado de forma correcta",
-              true,
-              null,
-              HttpStatus.OK
-      );
+        List<EquiposTabla> tablaGeneralEquipos = tablaGeneral.getEquipos();
+        EquiposTabla equiposTabla = EquiposTabla.builder()
+                .equipo(equipoOptional.get())
+                .puntos(0)
+                .victorias(0)
+                .empates(0)
+                .derrotas(0)
+                .golesFavor(0)
+                .golesContra(0)
+                .diferenciaGoles(0)
+                .build();
+
+        tablaGeneralEquipos.add(equiposTabla);
+        tablaGeneral.setEquipos(tablaGeneralEquipos);
+
+        generalRepository.save(tablaGeneral);
+
+        return new UtilService().armarRespuesta(
+                HttpStatus.OK.value(),
+                EXITO,
+                "Equipo registrado de forma correcta",
+                true,
+                null,
+                HttpStatus.OK
+        );
+      }
+      else {
+        return new UtilService().armarRespuesta(
+                HttpStatus.BAD_REQUEST.value(),
+                "Ocurrio un error al registrar equipo",
+                "El equipo que se requiere registrar no existe",
+                true,
+                null,
+                HttpStatus.BAD_REQUEST
+        );
+      }
     }
     else {
       return new UtilService().armarRespuesta(
               HttpStatus.BAD_REQUEST.value(),
               "Ocurrio un error al registrar equipo",
-              "El equipo que se requiere registrar no existe",
+              "La tabla general que estas buscando no existe",
               true,
               null,
               HttpStatus.BAD_REQUEST
@@ -74,22 +109,34 @@ public class TablaGeneralServiceImpl implements TablaGeneralService {
   }
 
   @Override
-  public ResponseEntity<RestResponse<Object>> actualizarTablaGeneral (EstadisticasRequest estadisticasRequest) {
-    Optional<TablaGeneral> tablaOptional = generalRepository.findById(estadisticasRequest.getIdTabla());
+  public ResponseEntity<RestResponse<Object>> actualizarTablaGeneral (EstadisticasRequest estadisticasRequest,
+          String idTabla) {
+    Optional<TablaGeneral> tablaGeneralOptional = generalRepository.findById(idTabla);
 
-    if (tablaOptional.isPresent()) {
-      TablaGeneral tablaGeneral = tablaOptional.get();
+    if (tablaGeneralOptional.isPresent()) {
+      TablaGeneral tablaGeneral = tablaGeneralOptional.get();
+      List<EquiposTabla> equiposTablas = tablaGeneral.getEquipos();
 
-      int golesFavor = tablaOptional.get().getGolesFavor() + estadisticasRequest.getGolesFavor();
-      int golesContra = tablaOptional.get().getGolesContra() + estadisticasRequest.getGolesContra();
+      for (int i = 0; i < equiposTablas.size(); i++) {
+        if (equiposTablas.get(i).getEquipo().getId().equals(estadisticasRequest.getIdEquipo())) {
+          int golesFavor = equiposTablas.get(i).getGolesFavor() + estadisticasRequest.getGolesFavor();
+          int golesContra = equiposTablas.get(i).getGolesContra() + estadisticasRequest.getGolesContra();
 
-      tablaGeneral.setPuntos(tablaOptional.get().getPuntos() + estadisticasRequest.getPuntos());
-      tablaGeneral.setVictorias(tablaOptional.get().getVictorias() + estadisticasRequest.getVictorias());
-      tablaGeneral.setEmpates(tablaOptional.get().getEmpates() + estadisticasRequest.getEmpates());
-      tablaGeneral.setDerrotas(tablaOptional.get().getDerrotas() + estadisticasRequest.getDerrotas());
-      tablaGeneral.setGolesFavor(golesFavor);
-      tablaGeneral.setGolesContra(golesContra);
-      tablaGeneral.setDiferenciaGoles(golesFavor - golesContra);
+          EquiposTabla equiposTabla = new EquiposTabla();
+
+          equiposTabla.setPuntos(equiposTablas.get(i).getPuntos() + estadisticasRequest.getPuntos());
+          equiposTabla.setVictorias(equiposTablas.get(i).getVictorias() + estadisticasRequest.getVictorias());
+          equiposTabla.setEmpates(equiposTablas.get(i).getEmpates() + estadisticasRequest.getEmpates());
+          equiposTabla.setDerrotas(equiposTablas.get(i).getDerrotas() + estadisticasRequest.getDerrotas());
+          equiposTabla.setGolesFavor(golesFavor);
+          equiposTabla.setGolesContra(golesContra);
+          equiposTabla.setDiferenciaGoles(golesFavor - golesContra);
+
+          equiposTablas.set(i, equiposTabla);
+        }
+      }
+
+      tablaGeneral.setEquipos(equiposTablas);
 
       generalRepository.save(tablaGeneral);
 
@@ -105,8 +152,8 @@ public class TablaGeneralServiceImpl implements TablaGeneralService {
     else {
       return new UtilService().armarRespuesta(
               HttpStatus.BAD_REQUEST.value(),
-              "Ocurrio un error al consultar el equipo en la tabla general",
-              "El equipo que se requiere consultar no existe",
+              "Ocurrio un error al registrar equipo",
+              "La tabla general que quieres actualizar no existe",
               true,
               null,
               HttpStatus.BAD_REQUEST
