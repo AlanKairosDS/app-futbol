@@ -124,6 +124,7 @@ public class TablaGeneralServiceImpl implements TablaGeneralService {
 
           EquiposTabla equiposTabla = new EquiposTabla();
 
+          equiposTabla.setEquipo(equiposTablas.get(i).getEquipo());
           equiposTabla.setPuntos(equiposTablas.get(i).getPuntos() + estadisticasRequest.getPuntos());
           equiposTabla.setVictorias(equiposTablas.get(i).getVictorias() + estadisticasRequest.getVictorias());
           equiposTabla.setEmpates(equiposTablas.get(i).getEmpates() + estadisticasRequest.getEmpates());

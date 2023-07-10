@@ -52,7 +52,7 @@ public class ResultadoServiceImpl implements ResultadoService {
     Optional<Partido> partidoOptional = partidosRepository.findById(resultadoRequest.getPartido());
 
     if (partidoOptional.isPresent()) {
-      Resultado resultado = Resultado.builder()
+      Resultado resultado = Resultado.builder() 
               .partido(partidoOptional.get())
               .jornada(resultadoRequest.getJornada())
               .marcadorLocal(resultadoRequest.getMarcadorLocal())
