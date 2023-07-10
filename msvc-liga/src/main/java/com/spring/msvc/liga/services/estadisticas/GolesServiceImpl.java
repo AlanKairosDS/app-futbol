@@ -42,8 +42,8 @@ public class GolesServiceImpl implements GolesService {
     if (golesAsistenciasOptional.isPresent()) {
       GolesAsistencias actualizaGoles = golesAsistenciasOptional.get();
 
-      actualizaGoles.setGoles(estadisticasRequest.getGoles());
-      actualizaGoles.setAsistencias(estadisticasRequest.getAsitencias());
+      actualizaGoles.setGoles(actualizaGoles.getGoles() + estadisticasRequest.getGoles());
+      actualizaGoles.setAsistencias(actualizaGoles.getAsistencias() + estadisticasRequest.getAsitencias());
 
       golesRepository.save(actualizaGoles);
 

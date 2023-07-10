@@ -42,8 +42,8 @@ public class TarjetasServiceImpl implements TarjetasService {
     if (tarjetasOptional.isPresent()) {
       Tarjetas actualizaTarjetas = tarjetasOptional.get();
 
-      actualizaTarjetas.setAmarillas(tarjetasOptional.get().getAmarillas() + estadisticasRequest.getAmarillas());
-      actualizaTarjetas.setRojas(tarjetasOptional.get().getRojas() + estadisticasRequest.getRojas());
+      actualizaTarjetas.setAmarillas(actualizaTarjetas.getAmarillas() + estadisticasRequest.getAmarillas());
+      actualizaTarjetas.setRojas(actualizaTarjetas.getRojas() + estadisticasRequest.getRojas());
 
       tarjetasRepository.save(actualizaTarjetas);
 
