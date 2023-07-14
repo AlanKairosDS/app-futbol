@@ -6,4 +6,4 @@ COPY ./target/msvc-liga.jar .
 
 EXPOSE 8000
 
-CMD ["java", "-Dspring.profiles.active=dev", "-jar", "msvc-liga.jar"]
+CMD ["java", "-Dspring.profiles.active=prod", "-jar", "msvc-liga.jar"]

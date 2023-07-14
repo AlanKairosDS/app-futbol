@@ -167,9 +167,9 @@ public class LigaVaronilServiceImpl implements LigaVaronilService {
 
       if (equipoOptional.isPresent()) {
         LigaVaronil ligaVaronil = ligaVaronilOptional.get();
+        Set<Equipo> equipoSet = ligaVaronil.getEquipos();
         Equipo equipo = equipoOptional.get();
 
-        Set<Equipo> equipoSet = ligaVaronil.getEquipos();
         equipoSet.add(equipo);
 
         ligaVaronil.setEquipos(equipoSet);

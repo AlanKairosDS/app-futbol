@@ -11,5 +11,9 @@ spring:
   data:
     mongodb:
       database: app_fubol_dev
-      host: localhost
+      host: host.docker.internal
       port: 27017
+
+msvcliga:
+  app:
+    origin: http://localhost:9000

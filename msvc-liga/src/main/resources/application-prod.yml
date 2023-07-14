@@ -11,5 +11,9 @@ spring:
   data:
     mongodb:
       database: app_fubol_dev
-      host: host.docker.internal
+      host: ec2-3-85-108-239.compute-1.amazonaws.com
       port: 27017
+
+msvcliga:
+  app:
+    origin: http://ec2-3-85-108-239.compute-1.amazonaws.com:9000
